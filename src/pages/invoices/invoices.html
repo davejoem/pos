@@ -1,0 +1,47 @@
+<ion-header>
+  <ion-toolbar>
+    <h5 class="secondary" text-center>Invoices</h5>
+    <ion-buttons end>
+      <button ion-button clear icon-only small color="primary" (click)="update()">
+        <ion-icon name="refresh"></ion-icon>
+      </button>
+      <button ion-button clear icon-only small color="secondary" *ngIf="isManager()" (click)="showSettings()">
+        <ion-icon name="cog"></ion-icon>
+      </button>
+      <button ion-button clear icon-only small color="danger" (click)="signOut()">
+        <ion-icon name="log-out"></ion-icon>
+      </button>
+      <!-- <button ion-button clear small (click)="showMenu($event)">
+        <ion-icon name="more"></ion-icon>
+      </button> -->
+      <!--<button ion-button small color="primary" clear icon-only (click)="toggleMenu()">
+        <ion-icon name="menu"></ion-icon>
+      </button>-->
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content padding>
+  <ion-grid>
+    <ion-row no-wrap>
+      <ion-col col-2 class="border-right"><b>ID</b></ion-col>
+      <ion-col col-3 class="border-right"><b>Date</b></ion-col>
+      <ion-col col-1 class="border-right"><b>Amount</b></ion-col>
+      <ion-col col-2 class="border-right"><b>To</b></ion-col>
+      <ion-col col-1 class="border-right"><b>By</b></ion-col>
+      <ion-col col-3 class="border-right"><b>Description</b></ion-col>
+    </ion-row>
+    <ion-row no-wrap *ngFor="let invoice of invoices" (click)="showInfo(invoice)">
+      <ion-col col-2 class="border-right">{{ invoice._id }}</ion-col>
+      <ion-col col-3 class="border-right">{{ invoice.date }}</ion-col>
+      <ion-col col-1 class="border-right">{{ invoice.amount }}</ion-col>
+      <ion-col col-2 class="border-right">{{ invoice.to }}</ion-col>
+      <ion-col col-1 class="border-right">{{ invoice.by.username }}</ion-col>
+      <ion-col col-3 class="border-right">{{ invoice.description }}</ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-fab bottom right>
+    <button ion-fab mini color="primary" (click)="addInvoice()">
+      <ion-icon name="add"></ion-icon>
+    </button>
+  </ion-fab>
+</ion-content>

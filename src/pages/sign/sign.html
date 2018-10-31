@@ -1,0 +1,53 @@
+<ion-header>
+  <ion-toolbar>
+    <h5 class="secondary" text-center>Sign In</h5>
+    <ion-buttons end>
+      <button ion-button clear small icon-only color="danger" (click)="cancel()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content padding>
+  <ion-row>
+    <ion-col></ion-col>
+    <ion-col col-8>
+      <form [formGroup]="signIn" (ngSubmit)="doSign()">
+        <ion-row>
+          <ion-col></ion-col>
+          <ion-col col-8>
+            <ion-item>
+              <ion-label floating>Username</ion-label>
+              <ion-input type="text" formControlName="username" (keyup)="checkKey($event)" autofocus></ion-input>
+            </ion-item>
+            <p class="danger info" *ngIf="signInErrors.username.length" text-center>{{ signInErrors.username }}</p>
+          </ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col></ion-col>
+          <ion-col col-8>
+            <ion-item>
+              <ion-label floating>Password</ion-label>
+              <ion-input type="password" formControlName="password" (keyup)="checkKey($event)"></ion-input>
+            </ion-item>
+            <p class="danger info" text-center *ngIf="signInErrors.password.length">{{ signInErrors.password }}</p>
+          </ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+      </form>
+    </ion-col>
+    <ion-col></ion-col>
+  </ion-row>
+</ion-content>
+<ion-footer>
+  <ion-row>
+    <ion-col></ion-col>
+    <ion-col col-4>
+      <button ion-button full color="secondary" (click)="doSign()" [disabled]="!signIn.valid">
+        Sign In
+      </button>
+    </ion-col>
+    <ion-col></ion-col>
+  </ion-row>
+</ion-footer>

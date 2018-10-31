@@ -1,0 +1,65 @@
+<ion-header>
+  <ion-toolbar>
+    <h5 class="secondary" text-center>Employees</h5>
+    <ion-buttons end>
+      <button ion-button clear icon-only small color="primary" (click)="update()">
+        <ion-icon name="refresh"></ion-icon>
+      </button>
+      <button ion-button clear icon-only small color="primary" (click)="sync('up')">
+        <ion-icon name="cloud-upload"></ion-icon>
+      </button>
+      <button ion-button clear icon-only small color="primary" (click)="sync('down')">
+        <ion-icon name="cloud-download"></ion-icon>
+      </button>
+      <!-- <button ion-button clear icon-only small color="secondary" (click)="showSettings()">
+        <ion-icon name="cog"></ion-icon>
+      </button> -->
+      <!-- <button ion-button clear icon-only small color="danger" (click)="signOut()">
+        <ion-icon name="log-out"></ion-icon>
+      </button> -->
+      <!-- <button ion-button clear small (click)="showMenu($event)">
+        <ion-icon name="more"></ion-icon>
+      </button> -->
+      <button ion-button small color="primary" clear icon-only (click)="toggleMenu()">
+        <ion-icon name="menu"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content padding>
+  <ion-list no-lines>
+    <ion-item class="emp" *ngFor="let employee of employees">
+      <ion-grid>
+        <ion-row>
+          <ion-col col-8>
+            <div>
+              <b>Name:</b> {{employee.username}}</div>
+            <div>
+              <b>Role:</b> {{employee.role}}</div>
+          </ion-col>
+          <ion-col>
+            <div>
+              <b>Sales:</b> {{employee.sales.length}}
+            </div>
+          </ion-col>
+          <ion-col>
+            <button ion-button clear icon-only small color="primary" (click)="showInfo(employee)">
+              <ion-icon name="information-circle"></ion-icon>
+            </button>
+            <button ion-button clear icon-only small color="primary" (click)="changePassword(employee)">
+              <ion-icon name="more"></ion-icon>
+            </button>
+            <button ion-button clear icon-only small color="danger" (click)="delete(employee, $index)">
+              <ion-icon name="remove"></ion-icon>
+            </button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+  </ion-list>
+  <ion-fab bottom right>
+    <button ion-fab mini color="primary" (click)="addEmployee($event)">
+      <ion-icon name="add"></ion-icon>
+    </button>
+  </ion-fab>
+</ion-content>

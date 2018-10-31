@@ -1,0 +1,39 @@
+stock {
+  // .category {
+  //   background-color: rgba(164, 164, 164, 0.50);
+  // }
+  .border-right {
+    border-right: 1px solid gray;
+  }
+  .footer * {
+    background-color: #D6D6D6;
+    color: black;
+  }
+
+  ion-row.good.row:nth-child(odd) {
+    background-color: rgba(128, 128, 128, 0.22);
+  }
+
+  .category:hover {
+    background: rgba(0, 255, 0, 0.158);
+  }
+  
+  ion-item {
+    padding: 5px 0px;
+    // .item-inner {
+    //   padding: 0px;
+    //   ion-label {
+    //     margin: 0px;
+    //   }
+    // }
+  }
+
+  .catlist {
+    box-sizing: border-box;
+    padding: 0px;
+  }
+  
+  .good:hover {
+    background-color: rgba(10, 108, 189, 0.479) !important;
+  }
+}

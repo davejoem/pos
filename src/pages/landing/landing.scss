@@ -1,0 +1,31 @@
+landing {
+  ion-content {
+    background-color: rgba(50, 47, 47, 0.40) !important;  
+  }
+  
+  #background {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+    width: 100%;
+
+    #icon {
+      background-color: white;
+      background-image: url("../assets/imgs/logo.png");
+      background-position: 50% 50%;
+      background-repeat: no-repeat;
+      background-size: 80% 80%;
+      border: 2px black solid;
+      border-radius: 50%;
+      height: 20%;
+      width: 20%;
+    }
+  }
+  .footer {
+    background-color: grey;
+    margin: 0;
+    padding: 0;
+  }
+}

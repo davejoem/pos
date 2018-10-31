@@ -1,0 +1,20 @@
+<ion-header>
+  <ion-navbar>
+    <h5 class="secondary">Settings</h5>
+  </ion-navbar>
+  <ion-toolbar>
+    <ion-segment [(ngModel)]="view" color="secondary">
+      <ion-segment-button value="database" (ionSelect)="changedView('database')">
+        Database
+      </ion-segment-button>
+      <ion-segment-button value="signin" (ionSelect)="changedView('security')">
+        Security
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content padding>
+  
+</ion-content>

@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-toolbar>
+    <h5 class="secondary" text-center>MPESA SALE</h5>
+    <ion-buttons end>
+      <button ion-button small clear icon-only color="danger" (click)="cancel()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content padding>
+  <ion-row no-wrap>
+    <ion-col></ion-col>
+    <ion-col col-8>
+      <form novalidate [formGroup]="sale">
+        <ion-row no-wrap>
+          <ion-col></ion-col>
+          <ion-col col-8>
+            <p text-center class="secondary">Enter the transaction code.</p>
+            <ion-item>
+              <ion-label floating>Name</ion-label>
+              <ion-input type="text" formControlName="name" autofocus></ion-input>
+            </ion-item>
+            <p class="danger info" text-center *ngIf="errors.name.length">{{ errors.name }}</p>
+          </ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+      </form>
+    </ion-col>
+    <ion-col></ion-col>
+  </ion-row>
+</ion-content>
+<ion-footer>
+  <ion-row no-wrap>
+    <ion-col></ion-col>
+    <ion-col col-6>
+      <button ion-button full icon-right color="secondary" (click)="makeSale()">
+        Make Sale
+      </button>
+    </ion-col>
+    <ion-col></ion-col>
+  </ion-row>
+</ion-footer>

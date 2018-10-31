@@ -1,0 +1,12 @@
+<ion-content no-scroll>
+  <div id="background" #background>
+    <div id="icon" #icon [@revolve]="phase"></div>
+    <br>
+    <p text-center>{{ ready ? 'Ready' : 'Please wait' }}</p>
+    <p *ngIf="!ready" #action text-center></p>
+    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+  </div>
+</ion-content>
+<ion-footer [hidden]="!ready">
+  <button ion-button full color="secondary" [hidden]="!ready" [disabled]="clicked" (click)="begin()">Begin</button>
+</ion-footer>

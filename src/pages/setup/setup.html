@@ -1,0 +1,166 @@
+<ion-content class="slides" padding>
+  <ion-split-pane enabled="true" when="xs">
+    <ion-menu enabled="true" id="welcome" type="push" [content]="slides">
+      <ion-grid id="steps" #steps>
+        <ion-row>
+          <button ion-button clear full [disabled]="index == 0" (click)="index = 0">Welcome</button>
+        </ion-row>
+        <ion-row>
+          <button ion-button clear full [hidden]="isSetup" [disabled]="index == 1" (click)="index = 1">Register System Manager</button>
+        </ion-row>
+        <ion-row>
+          <button ion-button clear full [disabled]="index == 2" (click)="index = 2">Register Categories</button>
+        </ion-row>
+        <ion-row>
+          <button ion-button clear full [disabled]="index == 3" (click)="index = 3">Register Goods</button>
+        </ion-row>
+        <ion-row>
+          <button ion-button clear full [disabled]="index == 4" (click)="index = 4">Register Employees</button>
+        </ion-row>
+        <ion-row>
+          <button ion-button clear full [disabled]="index == 5" (click)="index = 5">Finish</button>
+        </ion-row>
+      </ion-grid>
+
+      <ion-grid #items>
+
+        <ion-content class="item-list" [hidden]="index != 2">
+          <ion-list>
+            <ion-item class="item" *ngFor="let good of goods">
+              <p class="name">{{good.name}}</p>
+              <p class="price">{{good.price}}</p>
+              <p class="commission">{{good.commission}} %</p>
+            </ion-item>
+          </ion-list>
+        </ion-content>
+
+        <ion-content class="item-list" [hidden]="index != 3">
+          <ion-list>
+            <ion-item class="item" *ngFor="let employee of employees">
+              <div class="title">{{employee.username}}</div>
+            </ion-item>
+          </ion-list>
+        </ion-content>
+
+      </ion-grid>
+    </ion-menu>
+    <ion-grid #slides main>
+
+      <ion-row class="slide-container" [class.active]="index == 0">
+        <div class="slide" #welcomeslide>
+          <div class="image" style="background-image: url('assets/imgs/welcome.png')"></div>
+          <div class="item-list" hidden></div>
+          <h2 class="slide-title">Welcome to P.O.S setup</h2>
+          <p class="slide-subtitle" [hidden]="!isSetup">This wizard will guide you to setting up P.O.S</p>
+          <p class="slide-subtitle" [hidden]="isSetup">Please choose a category from the left panel.</p>
+        </div>
+      </ion-row>
+
+      <ion-row class="slide-container" [class.active]="index == 1">
+        <div class="slide" #signupslide>
+          <h5 class="secondary">Sign Up</h5>
+          <p>Please set up a manager for this system.</p>
+          <form [formGroup]="signUp" (ngSubmit)="doSign()">
+            <ion-row>
+              <ion-col>
+                <ion-item>
+                  <ion-label floating>Username</ion-label>
+                  <ion-input type="text" formControlName="username"></ion-input>
+                </ion-item>
+                <p class="danger info" [hidden]="!signUpErrors.username.length" text-center>{{ signUpErrors.username }}</p>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-item>
+                  <ion-label floating>Password</ion-label>
+                  <ion-input type="password" formControlName="password" (keyup)="checkKey()"></ion-input>
+                </ion-item>
+                <p class="danger info" text-center [hidden]="!signUpErrors.password.length">{{ signUpErrors.password }}</p>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-item>
+                  <ion-label floating>Confirm Password</ion-label>
+                  <ion-input type="password" formControlName="confirmpassword" (keyup)="checkKey()"></ion-input>
+                </ion-item>
+                <p class="danger info" [hidden]="!signUpErrors.confirmpassword.length" text-center>{{ signUpErrors.confirmpassword }}</p>
+              </ion-col>
+            </ion-row>
+          </form>
+        </div>
+      </ion-row>
+
+      <ion-row class="slide-container" [class.active]="index == 2">
+        <div class="slide" #addcategorieslide>
+          <div class="image" style="background-image: url('assets/imgs/goods.png')"></div>
+          <h2 class="slide-title">Add categories</h2>
+          <p class="slide-subtitle">Please add categories of goods you sell at your shop.</p>
+          <ion-fab right bottom (click)="addCategory()" [hidden]="index != 2">
+            <button ion-fab mini color="primary">
+              <ion-icon name="add"></ion-icon>
+            </button>
+          </ion-fab>
+        </div>
+      </ion-row>
+
+      <ion-row class="slide-container" [class.active]="index == 3">
+        <div class="slide" #addgoodslide>
+          <div class="image" style="background-image: url('assets/imgs/goods.png')"></div>
+          <h2 class="slide-title">Add goods</h2>
+          <p class="slide-subtitle">Please add goods you sell at your shop.</p>
+          <ion-fab right bottom (click)="addGood()" [hidden]="index != 3">
+            <button ion-fab mini color="primary">
+              <ion-icon name="add"></ion-icon>
+            </button>
+          </ion-fab>
+        </div>
+      </ion-row>
+
+      <ion-row class="slide-container" [class.active]="index == 4">
+        <div class="slide" #addemployees>
+          <div class="image" style="background-image: url('assets/imgs/people.png')"></div>
+          <h2 class="slide-title">Add employees</h2>
+          <p class="slide-subtitle">Please register your employees.</p>
+          <ion-fab right bottom (click)="addEmployee()" [hidden]="index != 4">
+            <button ion-fab mini color="primary">
+              <ion-icon name="add"></ion-icon>
+            </button>
+          </ion-fab>
+        </div>
+      </ion-row>
+
+      <ion-row class="slide-container" [class.active]="index == 5" #finish>
+        <div class="slide" #finishslide>
+          <div class="image" style="background-image: url('assets/imgs/success.png'); border: none;"></div>
+          <h2 class="slide-title">All done</h2>
+          <p class="slide-subtitle">You are now done.</p>
+          <p class="slide-subtitle">You can always add goods and register new employees from their respective pages.</p>
+          <p class="slide-subtitle">Please note that only a manager can do this.</p>
+        </div>
+      </ion-row>
+
+    </ion-grid>
+  </ion-split-pane>
+</ion-content>
+<ion-footer>
+  <ion-row>
+    <ion-col></ion-col>
+    <ion-col col-3>
+      <button ion-button full icon-left color="primary" [hidden]="index == 0" (click)="prev()">
+        <ion-icon name="arrow-back"></ion-icon>
+        Back
+      </button>
+    </ion-col>
+    <ion-col></ion-col>
+    <ion-col></ion-col>
+    <ion-col col-3>
+      <button ion-button full icon-right color="primary" (click)="next()">
+        {{ index == 1 ? 'Sign Up' : index == 5 ? 'Finish': 'Next' }}
+        <ion-icon name="arrow-forward"></ion-icon>
+      </button>
+    </ion-col>
+    <ion-col></ion-col>
+  </ion-row>
+</ion-footer>

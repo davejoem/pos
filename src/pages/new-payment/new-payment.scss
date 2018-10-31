@@ -1,0 +1,20 @@
+new-payment {
+  background-color: #555;
+  
+  ion-item, ion-header.header.header-md * {
+    background-color: #555 !important;
+  }
+
+  .scroll-content {
+    background-color: #555 !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  input, textarea {
+    color: white;
+  }
+  .info {
+    font-size: xx-small;
+  }
+}

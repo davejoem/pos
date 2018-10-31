@@ -1,0 +1,110 @@
+<ion-header>
+  <ion-toolbar>
+    <h5 class="secondary" text-center>New Invoice</h5>
+    <ion-buttons end>
+      <button ion-button small clear icon-only color="danger" (click)="cancel()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content padding>
+  <ion-row no-wrap>
+    <ion-col></ion-col>
+    <ion-col col-8>
+      <form novalidate [formGroup]="invoice">
+        <ion-row no-wrap>
+          <ion-col></ion-col>
+          <ion-col col-8>
+            <p text-center class="secondary">Enter the amount owed.</p>
+          </ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+        <ion-row no-wrap>
+          <ion-col></ion-col>
+          <ion-col col-8>
+            <ion-item>
+              <ion-label floating>Amount</ion-label>
+              <ion-input type="number" formControlName="amount" autofocus></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+        <ion-row no-wrap *ngIf="errors.amount.length">
+          <ion-col></ion-col>
+          <ion-col col-10>
+            <p class="danger info" text-center>{{ errors.amount }}</p>
+          </ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+        <ion-row no-wrap>
+          <ion-col></ion-col>
+          <ion-col col-8>
+            <p text-center class="secondary">
+              Please specify who this supply invoice if for
+            </p>
+          </ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+        <ion-row no-wrap>
+          <ion-col></ion-col>
+          <ion-col col-8>
+            <ion-item>
+              <ion-label floating>To</ion-label>
+              <ion-input type="text" formControlName="to"></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+        <ion-row no-wrap *ngIf="errors.to.length">
+          <ion-col></ion-col>
+          <ion-col col-10>
+            <p class="danger info" text-center>{{ errors.to }}</p>
+          </ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+        <ion-row no-wrap>
+          <ion-col col-8>
+            <p text-center class="secondary" *ngIf="has_description">Add a description for this invoice.</p>
+            <p text-center class="secondary" *ngIf="!has_description">You may add a description for the invoice.</p>
+          </ion-col>
+          <ion-col>
+            <button ion-fab mini color="{{ has_description ? 'danger' : 'secondary' }}" (click)="toggleDescription()">
+              <ion-icon name="add" *ngIf="!has_description"></ion-icon>
+              <ion-icon name="close" *ngIf="has_description"></ion-icon>
+            </button>
+          </ion-col>
+        </ion-row>
+        <ion-row no-wrap *ngIf="has_description">
+          <ion-col></ion-col>
+          <ion-col col-8>
+            <ion-item>
+              <ion-textarea placeholder="Enter a brief description for this invoice." formControlName="description"></ion-textarea>
+            </ion-item>
+          </ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+        <ion-row no-wrap *ngIf="errors.description.length && has_description">
+          <ion-col></ion-col>
+          <ion-col col-10>
+            <p class="danger info" text-center>{{ errors.description }}</p>
+          </ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+      </form>
+    </ion-col>
+    <ion-col></ion-col>
+  </ion-row>
+</ion-content>
+<ion-footer>
+  <ion-row no-wrap>
+    <ion-col></ion-col>
+    <ion-col col-8>
+      <button ion-button full icon-right color="secondary" (click)="create()">
+        Add Invoice
+        <ion-icon name="add-circle"></ion-icon>
+      </button>
+    </ion-col>
+    <ion-col></ion-col>
+  </ion-row>
+</ion-footer>

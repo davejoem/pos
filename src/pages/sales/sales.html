@@ -1,0 +1,141 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons left *ngIf="personalized">
+      <button ion-button small color="primary" clear icon-left (click)="back()">
+        <ion-icon name="arrow-back"></ion-icon>
+        Back
+      </button>
+    </ion-buttons>
+    <ion-title>
+      <h5 class="secondary" text-center>{{ personalized ? 'My Sales' : 'Sales' }}</h5>
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button clear icon-only small color="primary" (click)="search()">
+        <ion-icon name="search"></ion-icon>
+      </button>
+      <button ion-button clear icon-only small color="primary" (click)="update()">
+        <ion-icon name="refresh"></ion-icon>
+      </button>
+      <!-- <button ion-button clear icon-only small color="primary" (click)="sync('up')">
+        <ion-icon name="cloud-upload"></ion-icon>
+      </button>
+      <button ion-button clear icon-only small color="primary" (click)="sync('down')">
+        <ion-icon name="cloud-download"></ion-icon>
+      </button> -->
+      <button ion-button clear icon-only small color="danger" *ngIf="isManager()" (click)="deleteOld()">
+        <ion-icon name="remove"></ion-icon>
+      </button>
+      <button ion-button clear icon-only small color="secondary" *ngIf="isManager()" (click)="showSettings()">
+        <ion-icon name="cog"></ion-icon>
+      </button>
+      <!-- <button ion-button clear icon-only small color="danger" (click)="signOut()">
+        <ion-icon name="log-out"></ion-icon>
+      </button> -->
+      <!-- <button *ngIf="!personalized" ion-button clear icon-only small (click)="showMenu($event)">
+        <ion-icon name="more"></ion-icon>
+      </button> -->
+      <button ion-button small color="primary" clear icon-only (click)="toggleMenu()">
+        <ion-icon name="menu"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-segment [(ngModel)]="era">
+      <ion-segment-button value="today" (click)="update('today')">Today</ion-segment-button>
+      <ion-segment-button value="yesterday" (click)="update('yesterday')">Yesterday</ion-segment-button>
+      <ion-segment-button value="week" (click)="update('week')">This Week</ion-segment-button>
+      <ion-segment-button value="month" (click)="update('month')">This Month</ion-segment-button>
+      <ion-segment-button value="all" (click)="update('all')">All</ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+<ion-content padding>
+  <ion-segment [(ngModel)]="saleView">
+    <ion-segment-button value="all" (click)="evalTotals()">All</ion-segment-button>
+    <ion-segment-button value="normal" (click)="evalTotals()">Normal</ion-segment-button>
+    <ion-segment-button value="credit" (click)="evalTotals()">TILL</ion-segment-button>
+  </ion-segment>
+  <ion-toolbar>
+    <ion-row>
+      <ion-col class="border-right">
+        <b></b>Date</ion-col>
+      <ion-col col-2 class="border-right" *ngIf="!personalized">
+        <b>Employee</b>
+      </ion-col>
+      <ion-col class="border-right">
+        <b>Sale ID</b>
+      </ion-col>
+      <ion-col col-1 class="border-right">
+        <b>Cash</b>
+      </ion-col>
+      <ion-col col-1 class="border-right">
+        <b>Total</b>
+      </ion-col>
+      <ion-col col-1 class="border-right">
+        <b>{{ saleView == 'credit' ? 'Debt' : 'Balance' }}</b>
+      </ion-col>
+      <ion-col col-1 [class.border-right]="saleView == 'credit'">
+        <b>Commission</b>
+      </ion-col>
+      <ion-col col-2 *ngIf="saleView == 'credit'">
+        <b>Transcaction Code</b>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+  <ion-list>
+    <ion-item>
+      <ion-row class="sale" *ngFor="let sale of sales" [hidden]="(saleView == 'normal' && sale.debt) || (saleView == 'credit' && !sale.debt)"
+        (click)="showInfo(sale)">
+        <ion-col class="border-right">
+          <p>{{ formatDate(sale.date) }}</p>
+        </ion-col>
+        <ion-col col-2 class="border-right" *ngIf="!personalized">
+          <p>{{ sale.employee.username }}</p>
+        </ion-col>
+        <ion-col class="border-right">
+          <p>{{ sale._id.toString() }}</p>
+        </ion-col>
+        <ion-col col-1 class="border-right">
+          <p>{{ sale.cash }}</p>
+        </ion-col>
+        <ion-col col-1 class="border-right">
+          <p>{{ sale.total }}
+            <p>
+        </ion-col>
+        <ion-col col-1 class="border-right">
+          <p class="{{ sale.balance < 0 ? 'danger' : 'secondary' }}">{{ sale.balance }}</p>
+        </ion-col>
+        <ion-col col-1 [class.border-right]="saleView == 'credit'">
+          <p>{{ sale.commission.amount }}</p>
+        </ion-col>
+        <ion-col col-2 *ngIf="saleView == 'credit'">
+          <p>{{ sale.debtor }}</p>
+        </ion-col>
+      </ion-row>
+    </ion-item>
+  </ion-list>
+  <ion-infinite-scroll [threshold]="scroll_at" (ionInfinite)="$event.waitFor(getMoreSales())">
+    <ion-infinite-scroll-content loadingSpinner="crescent" loadingText="Getting more sales...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+  <ion-fab bottom right *ngIf="isManager()">
+    <!--<ion-fab bottom right>-->
+    <button ion-fab mini (click)="sell($event)">
+      <ion-icon name="add"></ion-icon>
+    </button>
+  </ion-fab>
+
+</ion-content>
+<ion-footer>
+  <ion-row>
+    <ion-col></ion-col>
+    <!-- <ion-col class="border-right">
+      <b>Total of Commission: </b>
+      <i text-right>KES {{ total_commission }} /=</i>
+    </ion-col> -->
+    <ion-col class="border-right">
+      <b>Total of Sales: </b>
+      <i class="danger" text-right> KES {{ total_sales }} /=</i>
+    </ion-col>
+  </ion-row>
+</ion-footer>

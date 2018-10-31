@@ -1,0 +1,179 @@
+<ion-header>
+  <ion-toolbar>
+    <h5 class="secondary" text-center>Edit {{ editable.name ? editable.name : "Good" }}</h5>
+    <ion-buttons end>
+      <button ion-button small clear icon-only color="danger" (click)="cancel()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content padding>
+  <ion-row no-wrap>
+    <ion-col></ion-col>
+    <ion-col col-10>
+      <form novalidate [formGroup]="good">
+        <ion-row no-wrap>
+          <ion-col></ion-col>
+          <ion-col col-8>
+            <p text-center class="secondary">Edit {{ editable.name ? editable.name : "the good" }}'s name.</p>
+            <ion-item>
+              <ion-label floating>Name</ion-label>
+              <ion-input type="text" formControlName="name" autofocus></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+        <ion-row no-wrap *ngIf="errors.name.length">
+          <ion-col></ion-col>
+          <ion-col col-10>
+            <p class="danger info" text-center>{{ errors.name }}</p>
+          </ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+        <ion-row no-wrap>
+          <ion-col></ion-col>
+          <ion-col col-8>
+            <p text-center class="secondary">Select new category for {{ editable.name ? editable.name : " this good" }}.</p>
+            <ion-select formControlName="category" interface="popover">
+              <ion-option *ngFor="let category of categories" value="{{category}}">{{category}}</ion-option>
+            </ion-select>
+          </ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+        <ion-row no-wrap>
+          <ion-col></ion-col>
+          <ion-col col-8>
+            <p text-center class="secondary">Set {{ editable.name ? editable.name : "the good" }}'s buying price.</p>
+            <ion-item>
+              <ion-label floating>Buying Price</ion-label>
+              <ion-input type="number" formControlName="buyingprice" min=0></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+        <ion-row no-wrap *ngIf="errors.buyingprice.length">
+          <ion-col></ion-col>
+          <ion-col col-10>
+            <p class="danger info" text-center>{{ errors.buyingprice }}</p>
+          </ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+        <ion-row no-wrap>
+          <ion-col></ion-col>
+          <ion-col col-8>
+            <p text-center class="secondary">Set {{ editable.name ? editable.name : "the good" }}'s selling price.</p>
+            <ion-item>
+              <ion-label floating>Selling Price</ion-label>
+              <ion-input type="number" formControlName="sellingprice" min=0></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+        <ion-row no-wrap *ngIf="errors.sellingprice.length">
+          <ion-col></ion-col>
+          <ion-col col-10>
+            <p class="danger info" text-center>{{ errors.sellingprice }}</p>
+          </ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+        <ion-row no-wrap>
+          <ion-col></ion-col>
+          <ion-col col-8>
+            <p text-center class="secondary">Set {{ editable.name ? editable.name : "the good" }}'s unique code.</p>
+            <ion-item>
+              <ion-label floating>Code</ion-label>
+              <ion-input type="text" formControlName="code"></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+        <ion-row no-wrap *ngIf="errors.code.length">
+          <ion-col></ion-col>
+          <ion-col col-10>
+            <p class="danger info" text-center>{{ errors.code }}</p>
+          </ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+        <ion-row no-wrap>
+          <ion-col></ion-col>
+          <ion-col col-8>
+            <p text-center class="secondary">Set {{ editable.name ? editable.name : "the good" }}'s commission as a percentage.</p>
+            <ion-item>
+              <ion-label floating>Commission (%)</ion-label>
+              <ion-input type="number" formControlName="commission"></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+        <ion-row no-wrap *ngIf="errors.commission.length">
+          <ion-col></ion-col>
+          <ion-col col-10>
+            <p class="danger info" text-center>{{ errors.commission }}</p>
+          </ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+        <ion-row no-wrap>
+          <ion-col></ion-col>
+          <ion-col col-8>
+            <p text-center class="secondary" *ngIf="has_brand_name">Set {{ editable.name ? editable.name : "the good" }}'s brand name.</p>
+            <p text-center class="secondary" *ngIf="!has_brand_name">You may set {{ editable.name ? editable.name : "the good" }}'s brand name.</p>
+            <ion-item *ngIf="has_brand_name">>
+              <ion-label floating>Brand Name</ion-label>
+              <ion-input type="text" formControlName="brand"></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col>
+            <button ion-fab mini (click)="toggleBrandName()">
+              <ion-icon name="add" *ngIf="!has_brand_name"></ion-icon>
+              <ion-icon name="close" *ngIf="has_brand_name"></ion-icon>
+            </button>
+          </ion-col>
+        </ion-row>
+        <ion-row no-wrap *ngIf="errors.brand.length && has_brand_name">
+          <ion-col></ion-col>
+          <ion-col col-10>
+            <p class="danger info" text-center>{{ errors.brand }}</p>
+          </ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+        <ion-row no-wrap>
+          <ion-col></ion-col>
+          <ion-col col-8>
+            <p text-center class="secondary" *ngIf="has_description">Set a description for {{ editable.name ? editable.name : "this good" }}.</p>
+            <p text-center class="secondary" *ngIf="!has_description">You may set a description for {{ editable.name ? editable.name : "this good" }}.</p>
+            <ion-item *ngIf="has_description">
+              <ion-textarea placeholder="Enter a brief payment for this good." formControlName="description"></ion-textarea>
+            </ion-item>
+          </ion-col>
+          <ion-col>
+            <button ion-fab mini (click)="toggleDescription()">
+              <ion-icon name="add" *ngIf="!has_description"></ion-icon>
+              <ion-icon name="close" *ngIf="has_description"></ion-icon>
+            </button>
+          </ion-col>
+        </ion-row>
+        <ion-row no-wrap *ngIf="errors.description.length && has_description">
+          <ion-col></ion-col>
+          <ion-col col-10>
+            <p class="danger info" text-center>{{ errors.description }}</p>
+          </ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+      </form>
+    </ion-col>
+    <ion-col></ion-col>
+  </ion-row>
+</ion-content>
+<ion-footer>
+  <ion-row no-wrap>
+    <ion-col></ion-col>
+    <ion-col col-6>
+      <button ion-button full icon-right color="secondary" [disabled]="!good.valid" (click)="create()">
+        Save Changes
+        <ion-icon name="add-circle"></ion-icon>
+      </button>
+    </ion-col>
+    <ion-col></ion-col>
+  </ion-row>
+</ion-footer>

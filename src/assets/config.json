@@ -1,0 +1,22 @@
+{
+  "appname": "p.o.s",
+  "database": {
+    "path:": {
+      "online": {
+        "full": "mongodb://dave:pospassword@ds113713.mlab.com:13713/pos",
+        "main": "ds113713.mlab.com:13713"
+      },
+      "offline": ""
+    },
+    "user": "dave",
+    "pass": "pospassword"
+  },
+  "sms": {
+    "api": "http://smsgateway.me/api/v3/messages",
+    "device": "50690",
+    "email": "davejoem@live.com",
+    "password": "Daunty27"
+  },
+  "user": "posuser",
+  "server": "http://pos-server.herokuapp.com"
+}

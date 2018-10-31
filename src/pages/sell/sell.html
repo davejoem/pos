@@ -1,0 +1,124 @@
+<ion-content padding>
+  <ion-split-pane when="xs" enabled="true">
+    <ion-menu enabled="true" id="welcome" type="push" [content]="goods">
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{ categorized ? selected_category.name : 'Categories' }}</ion-title>
+          <ion-buttons start>
+            <button ion-button clear small icon-only color="primary" *ngIf="categorized" (click)="categorized = !categorized">
+              <ion-icon name="arrow-back"></ion-icon>
+            </button>
+          </ion-buttons>
+        </ion-toolbar>
+        <ion-toolbar>
+          <ion-searchbar [(ngModel)]="good_search" showCancelButton="true" (ionCancel)="cancelSearch()" (ionInput)="search()"></ion-searchbar>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content #types>
+        <ion-list *ngIf="searched.length">
+          <ion-list-header>Search results</ion-list-header>
+          <ion-item *ngFor="let good of searched" (click)="addGood(good)">{{ good.name }}</ion-item>
+        </ion-list>
+        <ion-list *ngIf="!categorized && !searched.length">
+          <ion-item class="category" *ngFor="let category of categories" (click)="categorize(category)">{{ category.name }}</ion-item>
+        </ion-list>
+        <ion-list *ngIf="categorized && !searched.length">
+          <ion-item class="good" *ngFor="let good of selected_category.goods" (click)="addGood(good)">{{ good.name }}</ion-item>
+        </ion-list>
+      </ion-content>
+      <ion-footer *ngIf="isManager()">
+        <button ion-button full icon-left color="primary" (click)="manage()">          
+          <ion-icon name="arrow-left"></ion-icon>
+          Back
+        </button>
+      </ion-footer>
+    </ion-menu>
+    <ion-grid main #goods>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title class="secondary" text-center>Sale</ion-title>
+          <ion-buttons end>
+            <button ion-button clear small icon-only color="primary" (click)="showSales()">
+              <ion-icon name="list"></ion-icon>
+            </button>
+            <button ion-button clear small icon-only color="primary" (click)="sync('up')">
+              <ion-icon name="cloud-upload"></ion-icon>
+            </button>
+            <button ion-button clear icon-only small color="primary" (click)="update()">
+              <ion-icon name="refresh"></ion-icon>
+            </button>
+            <button ion-button clear icon-only small color="primary" *ngIf="isManager()" (click)="showSettings()">
+              <ion-icon name="cog"></ion-icon>
+            </button>
+            <button ion-button clear icon-only small color="danger" [hidden]="isManager()" (click)="signOut()">
+              <ion-icon name="log-out"></ion-icon>
+            </button>
+            <button ion-button clear icon-only small color="secondary" [hidden]="!isManager()" (click)="manage()">
+              <ion-icon name="log-out"></ion-icon>
+            </button>
+            <!--<button ion-button small color="primary" clear icon-only (click)="toggleMenu()">
+              <ion-icon name="menu"></ion-icon>
+            </button>-->
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <ion-row no-wrap class="heading">
+          <ion-col><b>Name</b></ion-col>
+          <ion-col col-2><b>Code</b></ion-col>
+          <ion-col col-2><b>Price</b></ion-col>
+          <ion-col col-3><b>Quantity</b></ion-col>
+          <ion-col col-2><b>Total</b></ion-col>
+        </ion-row>
+        <ion-row no-wrap class="listitem" *ngFor="let good of shopping_list">
+          <ion-col>
+            {{good.good.name}}
+          </ion-col>
+          <ion-col col-2>
+            {{good.good.code}}
+          </ion-col>
+          <ion-col col-2>
+            @ {{good.price}}
+          </ion-col>
+          <ion-col col-1 (click)="changeQuantity(good)">
+            {{good.quantity}}
+          </ion-col>
+          <ion-col col-2>
+            <ion-icon class="iconbutton" name="add" color="secondary" (click)="increaseQuantity(good)"></ion-icon>
+            <ion-icon class="iconbutton" name="remove" color="danger" (click)="decreaseQuantity(good)"></ion-icon>
+          </ion-col>
+          <ion-col col-1>
+            {{good.total}} /=
+          </ion-col>
+          <ion-col col-1>
+            <ion-icon text-right class="iconbutton" name="close" color="danger" (click)="removeGood(good)"></ion-icon>
+          </ion-col>
+        </ion-row>
+      </ion-content>
+      <ion-footer>
+        <ion-row>
+          <ion-col>
+            <p class="money"><b>Total: </b>KES {{order}}</p>
+          </ion-col>
+          <ion-col c0l-5>
+            <ion-row>
+              <p><b>Cash</b></p>
+              <ion-item>
+                <ion-input type="number" min="0" [(ngModel)]="cash"></ion-input>
+              </ion-item>
+            </ion-row>
+          </ion-col>
+          <ion-col>
+            <p class="money"><b>Balance: </b> KES {{balance}}</p>
+          </ion-col>
+          <ion-col>
+            <button ion-button [disabled]="!shopping_list.length" icon-left color="{{ cash < order ? 'danger' : 'secondary' }}" (click)="makeSale()">
+              <ion-icon name="cash"></ion-icon>
+              Make Sale
+            </button>
+          </ion-col>
+        </ion-row>
+      </ion-footer>
+    </ion-grid>
+  </ion-split-pane>
+</ion-content>

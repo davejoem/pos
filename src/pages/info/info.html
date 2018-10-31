@@ -1,0 +1,291 @@
+<ion-header>
+  <ion-toolbar padding>
+    <h5 class="secondary">
+      {{ type == 'employee' ? ('Employee: ' + data.username) : type == 'sale' ? 'Sale' : type == 'good' ? data.name : type == 'payment'
+      ? 'Payment' : type }}
+    </h5>
+    <ion-buttons end>
+      <button ion-button small clear icon-only color="danger" (click)="close()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar [hidden]="type != 'employee'">
+    <ion-segment [(ngModel)]="view">
+      <ion-segment-button value="sales" (click)="evalTotals()">Sales</ion-segment-button>
+      <ion-segment-button value="commissions" (click)="evalTotals()">Commissions</ion-segment-button>
+    </ion-segment>
+    <ion-segment [(ngModel)]="era">
+      <ion-segment-button value="today" (click)="filter('today')">Today</ion-segment-button>
+      <ion-segment-button value="yesterday" (click)="filter('yesterday')">Yesterday</ion-segment-button>
+      <ion-segment-button value="week" (click)="filter('week')">This Week</ion-segment-button>
+      <ion-segment-button value="month" (click)="filter('month')">This Month</ion-segment-button>
+      <ion-segment-button value="all" (click)="filter('all')">All</ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+<ion-content padding>
+
+  <ion-grid class="detail" *ngIf="type == 'employee'">
+    <ion-row no-wrap class="listtitle" [hidden]="view != 'sales'">
+      <h5 text-center>Sales</h5>
+    </ion-row>
+    <ion-row no-wrap class="listheader" [hidden]="view != 'sales'">
+      <ion-col class="border-right">
+        <b>Date</b>
+      </ion-col>
+      <!-- <ion-col col-2 class="border-right">
+        <b>Sale ID</b>
+      </ion-col> -->
+      <ion-col col-2 class="border-right">
+        <b>Cash</b>
+      </ion-col>
+      <ion-col col-2 class="border-right">
+        <b>Total</b>
+      </ion-col>
+      <ion-col col-2 class="border-right">
+        <b>Balance</b>
+      </ion-col>
+    </ion-row>
+    <ion-row no-wrap class="listitem" [hidden]="view != 'sales'" *ngFor="let sale of sales">
+      <ion-col class="border-right">{{ formatDate(sale.date) }}</ion-col>
+      <!-- <ion-col col-2 class="border-right">{{ sale._id.toString() }}</ion-col> -->
+      <ion-col col-2 class="border-right">{{ sale.cash }}</ion-col>
+      <ion-col col-2 class="border-right">{{ sale.total }}</ion-col>
+      <ion-col col-2 class="border-right">{{ sale.balance }}</ion-col>
+    </ion-row>
+    <ion-row no-wrap class="listtitle" [hidden]="view != 'commissions'">Commissions</ion-row>
+    <ion-row no-wrap class="listheader" [hidden]="view != 'commissions'">
+      <ion-col>
+        <b text-center>ID</b>
+      </ion-col>
+      <ion-col>
+        <b text-center>Amount</b>
+      </ion-col>
+    </ion-row>
+    <ion-row no-wrap class="listitem" [hidden]="view != 'commissions'" *ngFor="let commision of commissions">
+      <ion-col no-wrap>{{ commision._id }}</ion-col>
+      <ion-col no-wrap>{{ commision.amount }}</ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-grid class="detail" *ngIf="type == 'payment'">
+    <ion-row no-wrap>
+      <ion-col col-2>
+        <b>ID: </b>
+      </ion-col>
+      <ion-col>{{ data._id }}</ion-col>
+    </ion-row>
+    <ion-row no-wrap>
+      <ion-col col-2>
+        <b>Amount: </b>
+      </ion-col>
+      <ion-col>{{ data.amount }}</ion-col>
+    </ion-row>
+    <ion-row no-wrap *ngIf="data.isinvoice">
+      <ion-col col-2>
+        <b>Settled? </b>
+      </ion-col>
+      <ion-col class="{{ data.paid == data.amount ? 'secondary' : 'danger' }}">{{ data.paid == data.amount ? 'Yes' : 'No' }}</ion-col>
+    </ion-row>
+    <ion-row no-wrap *ngIf="data.isinvoice">
+      <ion-col col-2>
+        <b>Paid: </b>
+      </ion-col>
+      <ion-col>{{ data.paid }}</ion-col>
+    </ion-row>
+    <ion-row no-wrap *ngIf="data.isinvoice">
+      <ion-col col-2>
+        <b>Balance: </b>
+      </ion-col>
+      <ion-col>{{ data.balance }}</ion-col>
+    </ion-row>
+
+    <ion-row no-wrap>
+      <ion-col col-2>
+        <b>To: </b>
+      </ion-col>
+      <ion-col>{{ data.to }}</ion-col>
+    </ion-row>
+    <ion-row no-wrap>
+      <ion-col col-2>
+        <b>By: </b>
+      </ion-col>
+      <ion-col>{{ data.by.username }}</ion-col>
+    </ion-row>
+    <ion-row no-wrap>
+      <ion-col col-2>
+        <b>On: </b>
+      </ion-col>
+      <ion-col>{{ data.date }}</ion-col>
+    </ion-row>
+    <ion-row no-wrap>
+      <ion-col col-2>
+        <b>Description: </b>
+      </ion-col>
+      <ion-col>{{ data.description }}</ion-col>
+    </ion-row>
+    <button ion-button small *ngIf="data.isinvoice && data.amount != data.paid" (click)="pay()">Pay</button>
+  </ion-grid>
+
+  <ion-grid class="detail" *ngIf="type == 'invoice'">
+    <ion-row no-wrap>
+      <ion-col col-2>
+        <b>ID: </b>
+      </ion-col>
+      <ion-col>{{ data._id }}</ion-col>
+    </ion-row>
+    <ion-row no-wrap>
+      <ion-col col-2>
+        <b>Amount: </b>
+      </ion-col>
+      <ion-col>{{ data.amount }}</ion-col>
+    </ion-row>
+    <ion-row no-wrap>
+      <ion-col col-2>
+        <b>To: </b>
+      </ion-col>
+      <ion-col>{{ data.to }}</ion-col>
+    </ion-row>
+    <ion-row no-wrap>
+      <ion-col col-2>
+        <b>By: </b>
+      </ion-col>
+      <ion-col>{{ data.by.username }}</ion-col>
+    </ion-row>
+    <ion-row no-wrap>
+      <ion-col col-2>
+        <b>On: </b>
+      </ion-col>
+      <ion-col>{{ data.date }}</ion-col>
+    </ion-row>
+    <ion-row no-wrap>
+      <ion-col col-1>
+        <b>Description: </b>
+      </ion-col>
+      <ion-col>{{ data.description }}</ion-col>
+    </ion-row>
+    <button ion-button (click)="markAsPaid()">Mark As Paid</button>
+  </ion-grid>
+
+  <ion-grid class="detail" *ngIf="type == 'sale'">
+    <ion-row no-wrap>
+      <ion-col col-2>
+        <b>ID: </b>
+      </ion-col>
+      <ion-col>{{ data._id }}</ion-col>
+    </ion-row>
+    <ion-row no-wrap>
+      <ion-col col-2>
+        <b>Total: </b>
+      </ion-col>
+      <ion-col>{{ data.total }}</ion-col>
+    </ion-row>
+    <ion-row no-wrap>
+      <ion-col col-2>
+        <b>Cash: </b>
+      </ion-col>
+      <ion-col>{{ data.cash }}</ion-col>
+    </ion-row>
+    <ion-row no-wrap>
+      <ion-col col-2>
+        <b>Balance: </b>
+      </ion-col>
+      <ion-col class="{{data.balance < 0 ? 'danger' : 'secondary' }}">{{ data.balance }}</ion-col>
+    </ion-row>
+    <ion-row no-wrap>
+      <ion-col col-2>
+        <b>By: </b>
+      </ion-col>
+      <ion-col>{{ data.employee.username }}</ion-col>
+    </ion-row>
+    <ion-row></ion-row>
+    <ion-grid class="list">
+      <ion-row no-wrap class="listtitle">
+        <b text-center>Goods</b>
+      </ion-row>
+      <ion-row no-wrap class="listheader">
+        <ion-col class="border-right">
+          <b>Name</b>
+        </ion-col>
+        <ion-col class="border-right" col-2>
+          <b>Quantity</b>
+        </ion-col>
+        <ion-col class="border-right" col-2>
+          <b>Price</b>
+        </ion-col>
+        <ion-col col-2>Total</ion-col>
+      </ion-row>
+      <ion-row no-wrap class="listitem" *ngFor="let item of data.list">
+        <ion-col class="border-right">{{ item.good.name }}</ion-col>
+        <ion-col class="border-right" col-2>{{ item.quantity }}</ion-col>
+        <ion-col class="border-right" col-2>@{{ item.good.sellingprice }}</ion-col>
+        <ion-col col-2>{{ item.quantity * item.good.sellingprice }} /=</ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-grid>
+
+  <ion-grid class="detail" *ngIf="type == 'good'">
+    <ion-row no-wrap>
+      <ion-col>
+        <b>Name</b>
+      </ion-col>
+      <ion-col>{{ data.name }}</ion-col>
+    </ion-row>
+    <ion-row no-wrap>
+      <ion-col>
+        <b>Buying Price</b>
+      </ion-col>
+      <ion-col>{{ data.buyingprice }}</ion-col>
+    </ion-row>
+    <ion-row no-wrap>
+      <ion-col>
+        <b>Selling Price</b>
+      </ion-col>
+      <ion-col>{{ data.sellingprice }}</ion-col>
+    </ion-row>
+    <ion-row no-wrap>
+      <ion-col>
+        <b>Commission</b>
+      </ion-col>
+      <ion-col>{{ data.commission }} %</ion-col>
+    </ion-row>
+    <ion-row no-wrap>
+      <ion-col>
+        <b>Sold</b>
+      </ion-col>
+      <ion-col>{{ data.sold }} times</ion-col>
+    </ion-row>
+    <ion-row no-wrap>
+      <ion-col>
+        <b>Sold by</b>
+      </ion-col>
+      <ion-col>
+        <p *ngFor="let employee of data.employees">{{ employee.username }}</p>
+      </ion-col>
+    </ion-row>
+    <ion-row no-wrap>
+      <ion-col>
+        <b>Stock</b>
+      </ion-col>
+      <ion-col>{{ data.stock }} in stock</ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+<ion-footer *ngIf="type == 'employee'">
+  <ion-row no-wrap class="listtitle" [hidden]="view == 'commissions'">
+    <ion-col>
+      <b>Total Sales: </b>
+    </ion-col>
+    <ion-col>{{total_sales}}</ion-col>
+  </ion-row>
+  <ion-row no-wrap class="listtitle" [hidden]="view == 'sales'">
+    <ion-col>
+      <b>Total Commission: </b>
+    </ion-col>
+    <ion-col>{{total_commission}}</ion-col>
+  </ion-row>
+</ion-footer>
+<ion-footer *ngIf="type == 'sale' || type == 'invoice'" [hidden]="type == 'sale' && !data.debt">
+  <button ion-button full color="secondary" (click)="markAsPaid()">Mark As Paid</button>
+</ion-footer>

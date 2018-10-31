@@ -1,0 +1,13 @@
+{
+  "name": "Salman",
+  "short_name": "Salman",
+  "start_url": "index.html",
+  "display": "standalone",
+  "icons": [{
+    "src": "assets/icon/png/64x64.png",
+    "sizes": "64x64",
+    "type": "image/png"
+  }],
+  "background_color": "#4e8ef7",
+  "theme_color": "#4e8ef7"
+}

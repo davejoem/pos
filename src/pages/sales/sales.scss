@@ -1,0 +1,12 @@
+sales {
+  .border-right {
+    border-right: 1px solid gray;
+  }
+  .footer * {
+    background-color: #D6D6D6;
+    color: black;
+  }
+  .sale:hover {
+    background-color: rgba(10, 108, 189, 0.479) !important;
+  }
+}

@@ -1,0 +1,83 @@
+<ion-header>
+  <ion-toolbar>
+    <h5 class="secondary" text-center>New Stock</h5>
+    <ion-buttons end>
+      <button ion-button small clear icon-only color="danger" (click)="cancel()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content padding>
+  <ion-row no-wrap>
+    <ion-col></ion-col>
+    <ion-col col-10>
+      <form novalidate [formGroup]="stock">
+        <ion-row no-wrap *ngIf="!has_good">
+          <ion-col></ion-col>
+          <ion-col col-8>
+            <p text-center class="secondary">Select a good to stock.</p>
+            <ion-select formControlName="good" interface="popover">
+              <ion-option *ngFor="let name of names" value="{{ name }}">{{ name }}</ion-option>
+            </ion-select>
+          </ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+        <ion-row no-wrap *ngIf="has_packages">
+          <ion-col></ion-col>
+          <ion-col col-8>
+            <p text-center class="secondary" *ngIf="has_packages">Set a package size to add to stock.</p>
+            <p text-center class="secondary" *ngIf="!has_packages">Please select a package size to stock.</p>
+            <ion-select formControlName="package" interface="popover">
+              <ion-option *ngFor="let package of selected_good.packages" value="{{package}}">{{package}}</ion-option>
+            </ion-select>
+          </ion-col>
+          <ion-col>
+            <button ion-fab mini (click)="togglePackages()">
+              <ion-icon name="add" *ngIf="!has_packages"></ion-icon>
+              <ion-icon name="close" *ngIf="has_packages"></ion-icon>
+            </button>
+          </ion-col>
+        </ion-row>
+        <ion-row no-wrap *ngIf="errors.package.length && has_packages">
+          <ion-col></ion-col>
+          <ion-col col-10>
+            <p class="danger info" text-center>{{ errors.packages }}</p>
+          </ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+        <ion-row no-wrap>
+          <ion-col></ion-col>
+          <ion-col col-8>
+            <p text-center class="secondary">Enter quantity of {{ has_good ? selected_good.name : 'this good' }} to add.</p>
+            <ion-item>
+              <ion-label floating>Amount</ion-label>
+              <ion-input type="number" formControlName="amount" min=0></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+        <ion-row no-wrap *ngIf="errors.amount.length">
+          <ion-col></ion-col>
+          <ion-col col-10>
+            <p class="danger info" text-center>{{ errors.amount }}</p>
+          </ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+      </form>
+    </ion-col>
+    <ion-col></ion-col>
+  </ion-row>
+</ion-content>
+<ion-footer>
+  <ion-row no-wrap>
+    <ion-col></ion-col>
+    <ion-col col-6>
+      <button ion-button full icon-right color="secondary" (click)="create()">
+        Register Stock
+        <ion-icon name="add-circle"></ion-icon>
+      </button>
+    </ion-col>
+    <ion-col></ion-col>
+  </ion-row>
+</ion-footer>
